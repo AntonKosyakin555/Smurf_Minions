@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опрос: Любим ли мы Смурфов и Миньонов?</title>
+
+    <!-- Подключение шрифтов Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <!-- Подключение иконок FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Подключение Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Настройка темы Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        smurf: {
+                            light: '#4db8ff',
+                            DEFAULT: '#0088cc',
+                            dark: '#005c8a',
+                        },
+                        minion: {
+                            light: '#ffe066',
+                            DEFAULT: '#ffcc00',
+                            dark: '#e6b800',
+                        },
+                        warm: {
+                            50: '#fffdf7',
+                            100: '#fff9e6',
+                            200: '#ffefc2',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Пользовательские CSS анимации и эффекты */
+        body {
+            background-color: #fffdf7;
+            /* Теплый базовый фон */
+        }
+
+        .floating-shape {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px -5px rgba(0, 136, 204, 0.2), 0 10px 10px -5px rgba(0, 136, 204, 0.1);
+        }
+
+        /* Стилизация скроллбара */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fff9e6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0088cc;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005c8a;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 antialiased font-sans">
+
+    <!-- Навигационное меню (Sticky) -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-white/90 backdrop-blur-md shadow-sm border-b border-warm-200"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="flex items-center justify-between h-20">
+                <!-- Логотип -->
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-tr from-smurf to-minion flex items-center justify-center text-white text-xl font-black shadow-lg">
+                        СМ
+                    </div>
+                    <a href="#home" class="font-black text-2xl tracking-tight text-gray-900">
+                        <span class="text-smurf">Смурфы</span> <span class="text-gray-400 text-xl">&amp;</span> <span
+                            class="text-minion-dark">Миньоны</span>
+                    </a>
+                </div>
+
+                <!-- Десктопное меню -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home"
+                            class="text-gray-600 hover:text-smurf px-3 py-2 rounded-md text-sm font-bold transition-colors">Главная</a>
+                        <a href="#about"
+                            class="text-gray-600 hover:text-smurf px-3 py-2 rounded-md text-sm font-bold transition-colors">Об
+                            опросе</a>
+                        <a href="#preview"
+                            class="text-gray-600 hover:text-smurf px-3 py-2 rounded-md text-sm font-bold transition-colors">Вопросы</a>
+                        <a href="#contact"
+                            class="text-gray-600 hover:text-smurf px-3 py-2 rounded-md text-sm font-bold transition-colors">Контакты</a>
+                        <a href="#survey"
+                            class="bg-minion hover:bg-minion-dark text-gray-900 px-5 py-2.5 rounded-full text-sm font-black shadow-md hover:shadow-lg transform hover:scale-105 transition-all">Пройти
+                            опрос</a>
+                    </div>
+                </div>
+
+                <!-- Кнопка мобильного меню -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-btn"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-smurf hover:bg-warm-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-smurf">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="md:hidden hidden bg-white shadow-xl absolute w-full" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home"
+                    class="text-gray-800 hover:bg-warm-100 hover:text-smurf block px-3 py-2 rounded-md text-base font-bold">Главная</a>
+                <a href="#about"
+                    class="text-gray-800 hover:bg-warm-100 hover:text-smurf block px-3 py-2 rounded-md text-base font-bold">Об
+                    опросе</a>
+                <a href="#preview"
+                    class="text-gray-800 hover:bg-warm-100 hover:text-smurf block px-3 py-2 rounded-md text-base font-bold">Вопросы</a>
+                <a href="#contact"
+                    class="text-gray-800 hover:bg-warm-100 hover:text-smurf block px-3 py-2 rounded-md text-base font-bold">Контакты</a>
+                <a href="#survey"
+                    class="bg-minion text-gray-900 block px-3 py-3 rounded-md text-base font-black mt-4 text-center">Пройти
+                    опрос</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный раздел (Hero) -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center">
+        <!-- Декоративные фоновые элементы -->
+        <div
+            class="absolute top-20 left-10 w-64 h-64 bg-smurf-light rounded-full mix-blend-multiply filter blur-3xl opacity-30 floating-shape">
+        </div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-minion rounded-full mix-blend-multiply filter blur-3xl opacity-30 floating-shape"
+            style="animation-delay: 2s;"></div>
+        <div class="absolute -bottom-8 left-1/3 w-80 h-80 bg-smurf rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating-shape"
+            style="animation-delay: 4s;"></div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-warm-200 text-smurf-dark font-bold text-sm mb-6 shadow-sm border border-warm-200">
+                    <i class="fas fa-star text-minion mr-1"></i> Ежегодное глобальное исследование
+                </span>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight mb-8">
+                    Синие гномы или <br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-minion-dark to-minion">желтые
+                        проказники?</span>
+                </h1>
+                <p class="mt-4 text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto font-medium">
+                    Прими участие в самом масштабном опросе десятилетия. Чья харизма, юмор и стиль жизни вам ближе:
+                    классических Смурфиков или безумных Миньонов?
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#survey"
+                        class="inline-flex justify-center items-center px-8 py-4 border border-transparent text-lg font-black rounded-full text-white bg-smurf hover:bg-smurf-dark shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        Голосовать сейчас <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#about"
+                        class="inline-flex justify-center items-center px-8 py-4 border-2 border-smurf-light text-lg font-bold rounded-full text-smurf-dark bg-white hover:bg-warm-50 shadow-sm hover:shadow-md transition-all duration-300">
+                        Узнать подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел Об опросе -->
+    <section id="about" class="py-20 bg-white relative">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="w-full lg:w-1/2 relative">
+                    <!-- Заглушка для изображения -->
+                    <div
+                        class="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-warm-100 flex items-center justify-center border-4 border-white">
+                        <div class="absolute inset-0 bg-gradient-to-br from-smurf-light/20 to-minion/20"></div>
+                        <div class="text-center p-6 relative z-10">
+                            <i class="fas fa-image text-5xl text-gray-400 mb-3"></i>
+                            <p class="text-gray-500 font-bold"></p>
+                        </div>
+                    </div>
+                    <!-- Декоративная плашка -->
+                    <div
+                        class="absolute -bottom-6 -right-6 bg-minion text-gray-900 p-6 rounded-xl shadow-xl border-4 border-white transform rotate-3">
+                        <p class="font-black text-3xl">10,000+</p>
+                        <p class="font-bold text-sm">Уже проголосовали</p>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-1/2">
+                    <h2 class="text-smurf font-black tracking-wider uppercase text-sm mb-2">Наша история</h2>
+                    <h3 class="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">Вечный спор, который
+                        пора разрешить.</h3>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Мы — команда независимых исследователей поп-культуры. Идея этого проекта родилась после жаркого
+                        многочасового спора в нашем офисе, который едва не привел к разделению коллектива на два
+                        враждующих лагеря.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-8">
+                        Смурфы представляют собой гармонию, природу и магию ностальгии. Миньоны — это хаос, технологии,
+                        безумие и бананы. Этот опрос создан для того, чтобы раз и навсегда выяснить предпочтения
+                        аудитории и понять, что современному человеку ближе.
+                    </p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <div
+                                class="flex-shrink-0 h-10 w-10 rounded-full bg-smurf-light/20 flex items-center justify-center text-smurf">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <p class="ml-4 text-gray-700 font-bold text-lg">Абсолютно анонимно</p>
+                        </li>
+                        <li class="flex items-center">
+                            <div
+                                class="flex-shrink-0 h-10 w-10 rounded-full bg-minion/20 flex items-center justify-center text-minion-dark">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <p class="ml-4 text-gray-700 font-bold text-lg">Мгновенные результаты</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел Предварительный просмотр вопросов -->
+    <section id="preview" class="py-24 bg-warm-50 border-y border-warm-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-smurf font-black tracking-wider uppercase text-sm mb-2">Заглянем внутрь</h2>
+                <h3 class="text-4xl font-black text-gray-900 mb-4">Какие вопросы вас ждут?</h3>
+                <p class="text-lg text-gray-600">Мы подготовили 15 увлекательных вопросов. Вот небольшая часть того, над
+                    чем вам предстоит подумать.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Карточка 1 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-sm border border-warm-100 hover-lift relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-smurf-light/20 to-transparent rounded-bl-full z-0 transition-transform group-hover:scale-125">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-smurf text-white rounded-lg flex items-center justify-center text-xl font-black mb-6 shadow-md">
+                            1
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">Жилищный вопрос</h4>
+                        <p class="text-gray-600">Где бы вы предпочли жить: в уютном доме-грибе в волшебном лесу или в
+                            высокотехнологичной подземной лаборатории злодея?</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-sm border border-warm-100 hover-lift relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-minion/20 to-transparent rounded-bl-full z-0 transition-transform group-hover:scale-125">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-minion text-gray-900 rounded-lg flex items-center justify-center text-xl font-black mb-6 shadow-md">
+                            2
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">Языковой барьер</h4>
+                        <p class="text-gray-600">Что звучит забавнее: язык Миньонов (смесь испанского, итальянского и
+                            бананов) или слово "смурф", вставленное в каждое предложение?</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-sm border border-warm-100 hover-lift relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-smurf-light/20 to-transparent rounded-bl-full z-0 transition-transform group-hover:scale-125">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-smurf text-white rounded-lg flex items-center justify-center text-xl font-black mb-6 shadow-md">
+                            3
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">Выбор босса</h4>
+                        <p class="text-gray-600">Кто лучший лидер: мудрый Папа Смурф, всегда заботящийся о своих, или
+                            эксцентричный Грю с его грандиозными планами?</p>
+                    </div>
+                </div>
+
+                <!-- Карточка 4 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-sm border border-warm-100 hover-lift relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-minion/20 to-transparent rounded-bl-full z-0 transition-transform group-hover:scale-125">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-minion text-gray-900 rounded-lg flex items-center justify-center text-xl font-black mb-6 shadow-md">
+                            4
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">Командная работа</h4>
+                        <p class="text-gray-600">Кого бы вы наняли для постройки дома: организованных и
+                            специализированных Смурфов или веселых, но неуклюжих Миньонов?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center">
+                <a href="#survey" id="survey"
+                    class="inline-flex justify-center items-center px-8 py-4 text-lg font-black rounded-full text-white bg-gradient-to-r from-smurf to-smurf-light shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    Начать опрос <i class="fas fa-play ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел Контакты -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-warm-100 rounded-3xl overflow-hidden shadow-sm">
+                <div class="flex flex-col lg:flex-row">
+                    <!-- Информация -->
+                    <div class="w-full lg:w-1/2 p-10 lg:p-16 flex flex-col justify-center">
+                        <h2 class="text-smurf font-black tracking-wider uppercase text-sm mb-2">Связь с нами</h2>
+                        <h3 class="text-3xl md:text-4xl font-black text-gray-900 mb-8">Где находится наш штаб?</h3>
+
+                        <div class="space-y-8">
+                            <div class="flex items-start">
+                                <div
+                                    class="flex-shrink-0 mt-1 w-12 h-12 bg-white rounded-full flex items-center justify-center text-smurf shadow-sm">
+                                    <i class="fas fa-map-marker-alt text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <h4 class="text-xl font-bold text-gray-900">Локация</h4>
+                                    <p class="mt-2 text-gray-600 font-medium">ул. Мультяшная, д. 42<br>г. Москва,
+                                        Россия, 123456</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div
+                                    class="flex-shrink-0 mt-1 w-12 h-12 bg-white rounded-full flex items-center justify-center text-minion-dark shadow-sm">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <h4 class="text-xl font-bold text-gray-900">Часы работы штаба</h4>
+                                    <p class="mt-2 text-gray-600 font-medium">Понедельник - Пятница:<br>09:00 - 18:00
+                                        (МСК)</p>
+                                    <p class="mt-1 text-sm text-gray-500">В выходные мы смотрим мультики.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div
+                                    class="flex-shrink-0 mt-1 w-12 h-12 bg-white rounded-full flex items-center justify-center text-smurf shadow-sm">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                </div>
+                                <div class="ml-5">
+                                    <h4 class="text-xl font-bold text-gray-900">Email для связи</h4>
+                                    <p class="mt-2 text-gray-600 font-medium"><a href="mailto:hello@smurfvsminion.ru"
+                                            class="hover:text-smurf transition-colors">hello@smurfvsminion.ru</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Визуальная часть / Карта (Заглушка) -->
+                    <div class="w-full lg:w-1/2 bg-gradient-to-br from-smurf to-smurf-dark relative min-h-[400px]">
+                        <div class="absolute inset-0 opacity-20"
+                            style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;">
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
+                            <i class="fas fa-map-marked-alt text-7xl mb-6 text-minion"></i>
+                            <h4 class="text-2xl font-black mb-2">Найти нас на карте</h4>
+                            <p class="text-smurf-light mb-6">Мы находимся на пересечении Синего леса и Банановой улицы.
+                            </p>
+                            <button
+                                class="px-6 py-3 bg-white text-smurf-dark font-bold rounded-full hover:bg-minion hover:text-gray-900 transition-colors shadow-lg">
+                                Открыть Яндекс.Карты
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="bg-gray-900 text-white py-12 border-t-4 border-smurf">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-2 mb-4 md:mb-0">
+                <span class="text-smurf text-2xl"><i class="fas fa-poll"></i></span>
+                <span class="font-black text-xl tracking-tight">
+                    Смурфы <span class="text-gray-600">&amp;</span> <span class="text-minion">Миньоны</span>
+                </span>
+            </div>
+
+            <p class="text-gray-400 text-sm text-center md:text-left">
+                &copy; 2026 Лаборатория поп-культуры. Все права защищены. <br class="md:hidden">
+                Смурфы и Миньоны являются зарегистрированными товарными знаками их соответствующих владельцев.
+            </p>
+
+            <div class="flex gap-4 mt-6 md:mt-0">
+                <a href="#"
+                    class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-smurf transition-colors"><i
+                        class="fab fa-vk"></i></a>
+                <a href="#"
+                    class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-smurf transition-colors"><i
+                        class="fab fa-telegram-plane"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипт для работы мобильного меню и изменения шапки при скролле -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navbar = document.getElementById('navbar');
+
+            // Открытие/закрытие мобильного меню
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            // Закрытие меню при клике на ссылку в мобильной версии
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+
+            // Эффект тени для навигации при прокрутке
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.querySelector('.absolute').classList.add('shadow-md', 'bg-white/95');
+                    navbar.querySelector('.absolute').classList.remove('bg-white/90', 'shadow-sm');
+                } else {
+                    navbar.querySelector('.absolute').classList.remove('shadow-md', 'bg-white/95');
+                    navbar.querySelector('.absolute').classList.add('bg-white/90', 'shadow-sm');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
